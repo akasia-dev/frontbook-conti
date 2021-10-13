@@ -54,7 +54,7 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
 
                 {/* Component Name */}
                 <h4 className="text-xs text-gray-400 font-bold overflow-ellipsis whitespace-normal">
-                  {item.title}
+                  {item.name}
                 </h4>
 
                 {/* Component Prop */}
@@ -70,25 +70,28 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
                   )}
 
                   {/* Properties */}
-                  {item.props && (
+                  {item.controls && (
                     <button
                       aria-label="Component Properties"
                       className="bp3-dialog-close-button bp3-button bp3-minimal bp3-icon-properties"
-                      onClick={() => (Conti.selectedComponent = item.title)}
+                      onClick={() => (Conti.selectedComponent = item.name!)}
                     />
                   )}
 
                   {/* Code */}
-                  {item.code && (
+                  {/* TODO */}
+                  {false && (
                     <button
                       aria-label="Component Code"
                       className="bp3-dialog-close-button bp3-button bp3-minimal bp3-icon-code"
                       onClick={() => {
                         clipboardCopy(
-                          item.code!(
-                            Conti.componentProps[item.title],
-                            Conti.componentPropTypes[item.title]
-                          )
+                          // TODO
+                          // item.code!(
+                          //   Conti.componentProps[item.name!],
+                          //   Conti.componentPropTypes[item.name!]
+                          // )
+                          ''
                         )
 
                         const AppToaster = Toaster.create({
@@ -108,7 +111,11 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
                 </div>
               </div>
               <div className="w-full h-full flex justify-center items-center p-4 pb-0 overflow-scroll">
-                {item.component(Conti.componentProps[item.title])}
+                {item.renderProps
+                  ? item.component!(
+                      item.renderProps(Conti.componentProps[item.name!])
+                    )
+                  : item.component!()}
               </div>
             </div>
           )

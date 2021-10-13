@@ -11,22 +11,22 @@ export const packComponent = (components: IContiComponent[]) => {
   const componentProps: IContiStoreComponentProps = {}
 
   if (!components) return
-  for (const { props, title } of Object.values(components)) {
-    if (props) {
-      componentPropTypes[title] = props
-      componentProps[title] = {}
+  for (const { controls, name } of Object.values(components)) {
+    if (controls) {
+      componentPropTypes[name!] = controls
+      componentProps[name!] = {}
 
-      for (const propName of Object.keys(props)) {
-        const defaultValue = props[propName].defaultValue
+      for (const propName of Object.keys(controls)) {
+        const defaultValue = controls[propName].defaultValue
         if (
-          props[propName].type === 'select' &&
+          controls[propName].type === 'select' &&
           typeof defaultValue === 'object'
         ) {
-          componentProps[title][propName] = defaultValue.defaultValue as string
+          componentProps[name!][propName] = defaultValue.defaultValue as string
           continue
         }
 
-        componentProps[title][propName] = props[propName].defaultValue as
+        componentProps[name!][propName] = controls[propName].defaultValue as
           | string
           | number
       }
