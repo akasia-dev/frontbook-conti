@@ -1,0 +1,12 @@
+@tailwind base;
+/* Start purging... */
+@tailwind components;
+/* Stop purging. */
+
+@import './index';
+
+/* Start purging... */
+@tailwind utilities;
+/* Stop purging. */
+
+@import './app/utils';

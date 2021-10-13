@@ -1,0 +1,9 @@
+.developmentPage {
+  @apply w-full min-h-full flex justify-center;
+  @apply h-full overflow-y-scroll relative;
+  background-color: #51d4b0;
+}
+
+.bp3-control.bp3-switch input:checked ~ .bp3-control-indicator {
+  background: #51d4b0;
+}

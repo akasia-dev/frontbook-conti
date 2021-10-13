@@ -1,0 +1,4 @@
+lib/*
+.next
+coverage
+dist
