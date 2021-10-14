@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import RGL, { WidthProvider } from 'react-grid-layout'
 import { useState } from 'react'
 import clipboardCopy from 'clipboard-copy'
@@ -29,23 +29,59 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
     ..._props
   }
 
-  const [layout] = useState(
+  const [layout, setLayout] = useState(
     props.items.map((item, i) => {
       if (!item) return
       return {
         x: item.x ?? 0,
         y: item.y ?? 0,
-        w: item.w ?? 5,
-        h: item.h ?? 5,
+        w: item.w ?? 6,
+        h: item.h ?? 6,
         i: i.toString()
       }
     })
   )
 
+  useEffect(() => {
+    setLayout(
+      props.items.map((item, i) => {
+        if (!item) return
+        return {
+          x: item.x ?? 0,
+          y: item.y ?? 0,
+          w: item.w ?? 6,
+          h: item.h ?? 6,
+          i: i.toString()
+        }
+      })
+    )
+
+    props.items.map((item) => {
+      if (!item.name) return
+      try {
+        ;(window as any).frontbook.react({
+          name: `${item.name}-local`,
+          props: item.renderProps
+            ? item.renderProps(Conti.componentProps[item.name!])
+            : {}
+        })
+      } catch (e) {}
+    })
+  }, [props.items])
+
   return (
     <>
       <ReactGridLayout layout={layout} {...props}>
         {props.items.map((item, i) => {
+          let renderedComponent = <></>
+          try {
+            renderedComponent = React.createElement(
+              `${item.name}-local`,
+              null,
+              null
+            )
+          } catch (e) {}
+
           return (
             <div className="bp3-dialog" key={i}>
               <div className="bp3-dialog-header flex justify-between pl-2">
@@ -111,11 +147,7 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
                 </div>
               </div>
               <div className="w-full h-full flex justify-center items-center p-4 pb-0 overflow-scroll">
-                {item.renderProps
-                  ? item.component!(
-                      item.renderProps(Conti.componentProps[item.name!])
-                    )
-                  : item.component!()}
+                {renderedComponent}
               </div>
             </div>
           )

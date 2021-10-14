@@ -8,13 +8,17 @@ export interface IContiComponent {
   renderWrapper?: (props: IContiStoreComponentValue) => JSX.Element
   children?: string
   documentUrl?: string
+  x?: number
+  y?: number
+  w?: number
+  h?: number
 }
 
 export interface IContiPositionData {
-  x: number
-  y: number
-  w: number
-  h: number
+  x?: number
+  y?: number
+  w?: number
+  h?: number
 }
 
 export type ContiComponentPropType = 'string' | 'number' | 'boolean' | 'select'

@@ -1,13 +1,25 @@
-import type { IContiLayoutProps } from './interface'
+import type { IContiComponent, IContiLayoutProps } from './interface'
 import style from './ContiLayout.scss'
 import { observer } from 'mobx-react-lite'
 import { core } from 'core'
 import ResizableLayout from './ResizableLayout'
 import ContiProperties from './ContiProperties'
 import ContiPageOptions from './ContiPageOptions'
+import { rectanglePack } from 'utils/ractanglePack'
 
 const ContiLayout = (props: IContiLayoutProps) => {
   const { Conti } = core.store
+
+  const componentWithPositions = rectanglePack({
+    w: 12,
+    h: Number.MAX_VALUE,
+    nodes: props.components.map((component) => {
+      if (typeof component.w === 'undefined') component.w = 6
+      if (typeof component.h === 'undefined') component.h = 6
+
+      return component
+    }) as (IContiComponent & { w: number; h: number })[]
+  })
 
   // * 페이지 로직
   return (
@@ -19,9 +31,7 @@ const ContiLayout = (props: IContiLayoutProps) => {
     >
       <div className="contiComponents">
         <ResizableLayout
-          items={props.components.map((component, index) => {
-            return { ...component, ...props.positions[index] }
-          })}
+          items={componentWithPositions}
           onLayoutChange={(layout) => {
             Conti.plainLayout = JSON.stringify(layout)
 

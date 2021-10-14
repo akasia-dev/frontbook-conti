@@ -22,9 +22,14 @@ const ContiPropertiesRender = () => {
           const value =
             Conti.componentProps[Conti.selectedComponent!][componentPropName]
 
-          const update = (value) =>
-            (Conti.componentProps[Conti.selectedComponent!][componentPropName] =
-              value)
+          const update = (value) => {
+            Conti.componentProps[Conti.selectedComponent!][componentPropName] =
+              value
+            ;(window as any).frontbook.update(
+              `${Conti.selectedComponent}-local`,
+              (component) => (component[componentPropName] = value)
+            )
+          }
 
           if (componentPropType.type === 'string')
             return (

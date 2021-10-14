@@ -60,6 +60,7 @@ const App: NextComponentType<
           type="text/css"
           href="/lib/blueprintjs-icons/lib/css/blueprint-icons.css"
         />
+        <script src="component.js"></script>
       </Head>
 
       {/* SEO 용 메타정보를 추가로 주입합니다. */}
