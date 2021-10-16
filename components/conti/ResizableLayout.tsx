@@ -69,6 +69,8 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
     })
   }, [props.items])
 
+  const [testCount, setTestCount] = useState(0)
+
   return (
     <>
       <ReactGridLayout layout={layout} {...props}>
@@ -77,8 +79,8 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
           try {
             renderedComponent = React.createElement(
               `${item.name}-local`,
-              null,
-              null
+              undefined,
+              item.children
             )
           } catch (e) {}
 
