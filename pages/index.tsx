@@ -26,17 +26,34 @@ const ContiPage = () => {
   return (
     <>
       <Head>
-        <title>컴포넌트 콘티 페이지</title>
+        <title>
+          {typeof window !== 'undefined' && window.frontbook?.title
+            ? window.frontbook.title
+            : 'Component Conti Page'}
+        </title>
       </Head>
-      <div className="developmentPage">
+      <div
+        className="developmentPage"
+        style={{
+          backgroundColor:
+            typeof window !== 'undefined' && window.frontbook?.mainColor
+              ? window.frontbook.mainColor
+              : '#51d4b0'
+        }}
+      >
         <ContiLayout
           {...{
             components,
             positions,
             projectDescription: {
-              title: '🧤  컴포넌트 콘티 페이지',
+              title:
+                typeof window !== 'undefined' && window.frontbook?.subtitle
+                  ? window.frontbook.subtitle
+                  : '🧤  Component Conti Page',
               subtitle:
-                '여기서 컴포넌트 목록을 확인한 후 필요한 컴포넌트 코드를 생성해서 복사하실 수 있습니다.'
+                typeof window !== 'undefined' && window.frontbook?.description
+                  ? window.frontbook.description
+                  : 'After checking the component list here, you can create and copy the required component code.'
             },
             width: 900
           }}

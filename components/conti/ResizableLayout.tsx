@@ -69,8 +69,6 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
     })
   }, [props.items])
 
-  const [testCount, setTestCount] = useState(0)
-
   return (
     <>
       <ReactGridLayout layout={layout} {...props}>
@@ -83,6 +81,9 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
               item.children
             )
           } catch (e) {}
+
+          const isPropExist =
+            Object.keys(Conti.componentProps[item.name!]).length > 0
 
           return (
             <div className="bp3-dialog" key={i}>
@@ -117,35 +118,135 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
                   )}
 
                   {/* Code */}
-                  {/* TODO */}
-                  {false && (
-                    <button
-                      aria-label="Component Code"
-                      className="bp3-dialog-close-button bp3-button bp3-minimal bp3-icon-code"
-                      onClick={() => {
-                        clipboardCopy(
-                          // TODO
-                          // item.code!(
-                          //   Conti.componentProps[item.name!],
-                          //   Conti.componentPropTypes[item.name!]
-                          // )
-                          ''
+                  <button
+                    aria-label="React Code"
+                    className="bp3-dialog-close-button bp3-button bp3-minimal bp3-icon-code-block"
+                    onClick={() => {
+                      const props = (item as any).renderProps(
+                        Conti.componentProps[item.name!]
+                      )
+                      const plainTextProps: Record<string, string> = {}
+
+                      const pascalName = item
+                        .name!.split('/')
+                        .map((snake) =>
+                          snake
+                            .split('-')
+                            .map(
+                              (substr) =>
+                                substr.charAt(0).toUpperCase() + substr.slice(1)
+                            )
+                            .join('')
                         )
+                        .join('/')
 
-                        const AppToaster = Toaster.create({
-                          className: 'recipe-toaster',
-                          position: Position.TOP
-                        })
+                      Object.entries(props).map(([key, value]: any) => {
+                        if (typeof value === 'object' || Array.isArray(value)) {
+                          plainTextProps[key] = `{${JSON.stringify(value)}}`
+                          return
+                        }
+                        if (typeof value === 'string') {
+                          plainTextProps[key] = `"${value}"`
+                          return
+                        }
+                        plainTextProps[key] = `{${value.toString()}}`
+                      })
 
-                        AppToaster.show({
-                          message: 'Code Copied ✨',
-                          intent: 'success',
-                          timeout: 700,
-                          icon: 'confirm'
-                        })
-                      }}
-                    />
-                  )}
+                      const propString = isPropExist
+                        ? '\n  ' +
+                          Object.entries(plainTextProps)
+                            .map(([key, value]) => `${key}=${value}`)
+                            .join('\n  ') +
+                          '\n'
+                        : ''
+
+                      const endTag =
+                        item.children !== undefined
+                          ? `>${item.children}<${pascalName}>`
+                          : `${propString.length === 0 ? ' ' : ''}/>`
+
+                      const pureCode = `<${pascalName}${propString}${endTag}`
+                      clipboardCopy(pureCode)
+
+                      const AppToaster = Toaster.create({
+                        className: 'recipe-toaster',
+                        position: Position.TOP
+                      })
+
+                      AppToaster.show({
+                        message: 'Code Copied ✨',
+                        intent: 'success',
+                        timeout: 700,
+                        icon: 'confirm'
+                      })
+                    }}
+                  />
+
+                  <button
+                    aria-label="Component Code"
+                    className="bp3-dialog-close-button bp3-button bp3-minimal bp3-icon-code"
+                    onClick={() => {
+                      const props = (item as any).renderProps(
+                        Conti.componentProps[item.name!]
+                      )
+                      const plainTextProps: Record<string, string> = {}
+                      Object.entries(props).map(([key, value]: any) => {
+                        if (typeof value === 'object' || Array.isArray(value)) {
+                          plainTextProps[key] = JSON.stringify(value)
+                          return
+                        }
+                        if (typeof value === 'string') {
+                          plainTextProps[key] = `"${value}"`
+                          return
+                        }
+                        plainTextProps[key] = value.toString()
+                      })
+                      const propString = isPropExist
+                        ? '\n        ' +
+                          Object.entries(plainTextProps)
+                            .map(([key, value]) => `${key}: ${value}`)
+                            .join(',\n        ') +
+                          '\n      },'
+                        : '},'
+                      const pureCode = `<script>
+  frontbook
+    .react({
+      name: "${item.name}-local",
+      props: {${propString}
+      useEffect: function (component) {
+        // TODO: Apply side effect
+      }
+    })
+
+  // TODO: Update component in outside
+  frontbook
+    .update(
+      '${item.name}-local',
+      function (element) {
+        // TODO: Apply side effect
+      }
+    )
+</script>
+
+<${item.name}-local>${item.children !== undefined ? item.children : ''}</${
+                        item.name
+                      }-local>`
+
+                      clipboardCopy(pureCode)
+
+                      const AppToaster = Toaster.create({
+                        className: 'recipe-toaster',
+                        position: Position.TOP
+                      })
+
+                      AppToaster.show({
+                        message: 'Code Copied ✨',
+                        intent: 'success',
+                        timeout: 700,
+                        icon: 'confirm'
+                      })
+                    }}
+                  />
                 </div>
               </div>
               <div className="w-full h-full flex justify-center items-center p-4 pb-0 overflow-scroll">
