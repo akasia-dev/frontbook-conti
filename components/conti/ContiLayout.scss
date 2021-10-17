@@ -3,6 +3,9 @@
 
   .contiComponents {
     width: calc(100% - 250px);
+    @media (max-width: 900px) {
+      @apply w-full;
+    }
     height: max-content;
     .react-grid-layout {
       @apply inline-block w-full mb-64;
@@ -14,7 +17,11 @@
     margin-top: 0.625rem;
 
     .bp3-dialog {
-      box-shadow: 2px 8px 3px rgba(16, 22, 26, 0.2);
+      box-shadow: 2px 8px 3px rgba(135, 135, 135, 0.2);
+    }
+
+    @media (max-width: 900px) {
+      @apply hidden;
     }
   }
 }

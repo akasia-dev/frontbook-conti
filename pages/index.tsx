@@ -5,12 +5,15 @@ import style from './index.scss'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { core } from 'core'
+import { useWindowSize } from 'utils/hooks/useWindowSize'
 
 declare const window: Window & { frontbook: any }
 
 const ContiPage = () => {
   const [components, setComponents] = useState([])
   const [positions, setPositions] = useState([])
+  const [mainColor, setMainColor] = useState('#51d4b0')
+  const size = useWindowSize()
 
   useEffect(() => {
     setComponents(window.frontbook?.demo ?? [])
@@ -22,6 +25,9 @@ const ContiPage = () => {
       core.store.Conti.componentPropTypes = componentPropTypes
       core.store.Conti.componentProps = componentProps
     }
+
+    if (typeof window !== 'undefined' && window.frontbook?.mainColor)
+      setMainColor(window.frontbook.mainColor)
   }, [])
   return (
     <>
@@ -35,10 +41,7 @@ const ContiPage = () => {
       <div
         className="developmentPage"
         style={{
-          backgroundColor:
-            typeof window !== 'undefined' && window.frontbook?.mainColor
-              ? window.frontbook.mainColor
-              : '#51d4b0'
+          backgroundColor: mainColor
         }}
       >
         <ContiLayout
@@ -55,7 +58,7 @@ const ContiPage = () => {
                   ? window.frontbook.description
                   : 'After checking the component list here, you can create and copy the required component code.'
             },
-            width: 900
+            width: size.width
           }}
         />
       </div>

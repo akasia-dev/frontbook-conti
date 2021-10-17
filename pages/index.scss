@@ -7,3 +7,14 @@
 .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator {
   background: #51d4b0;
 }
+
+.bp3-dialog {
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+    0 18px 46px 6px rgba(205, 205, 205, 0.2);
+}
+
+.react-grid-item {
+  @media (max-width: 570px) {
+    width: calc(100% - 20px) !important;
+  }
+}

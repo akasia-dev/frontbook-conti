@@ -6,9 +6,13 @@ import ResizableLayout from './ResizableLayout'
 import ContiProperties from './ContiProperties'
 import ContiPageOptions from './ContiPageOptions'
 import { rectanglePack } from 'utils/ractanglePack'
+import { useWindowSize } from 'utils/hooks/useWindowSize'
+import { useEffect, useState } from 'react'
 
 const ContiLayout = (props: IContiLayoutProps) => {
   const { Conti } = core.store
+  const [cols, setCols] = useState(12)
+  const [isShowLayout, setIsShowLayout] = useState(true)
 
   const componentWithPositions = rectanglePack({
     w: 12,
@@ -21,7 +25,25 @@ const ContiLayout = (props: IContiLayoutProps) => {
     }) as (IContiComponent & { w: number; h: number })[]
   })
 
-  // * 페이지 로직
+  const size = useWindowSize()
+  const windowWidth =
+    typeof size.width !== 'undefined' ? size.width : props.width!
+
+  const enableLayout = () => setIsShowLayout(true)
+  useEffect(() => {
+    if (size.width !== undefined) {
+      const newCols = size.width >= 570 ? 12 : 1
+      setCols(newCols)
+
+      // If the initial cols start with 1,
+      // the layout must be re-rendered to function normally.
+      if (cols < newCols) {
+        setIsShowLayout(false)
+        setTimeout(enableLayout, 0)
+      }
+    }
+  }, [size])
+
   return (
     <div
       className="contiLayout"
@@ -30,25 +52,25 @@ const ContiLayout = (props: IContiLayoutProps) => {
       }}
     >
       <div className="contiComponents">
-        <ResizableLayout
-          items={componentWithPositions}
-          onLayoutChange={(layout) => {
-            Conti.plainLayout = JSON.stringify(layout)
-
-            if (typeof props.onLayoutChange === 'function')
-              props.onLayoutChange(layout)
-          }}
-          cols={12}
-          rowHeight={30}
-          isDraggable={Conti.isEditMode}
-          isResizable={Conti.isEditMode}
-        />
+        {isShowLayout && (
+          <ResizableLayout
+            items={componentWithPositions}
+            cols={cols}
+            rowHeight={30}
+            isDraggable={Conti.isEditMode}
+            isResizable={Conti.isEditMode}
+          />
+        )}
       </div>
 
       <div
         className="contiProperties"
         style={{
-          right: props.width ? `calc(50% - ${props.width / 2}px)` : undefined
+          right: props.width
+            ? `calc(50% - ${
+                windowWidth >= props.width ? props.width / 2 : windowWidth / 2
+              }px)`
+            : undefined
         }}
       >
         <ContiPageOptions />

@@ -7,7 +7,6 @@ import { ServiceStore } from 'interfaces/service'
 export class Conti {
   protected store!: ServiceStore
 
-  plainLayout = ''
   isEditMode = false
 
   selectedComponent: string | null = null
