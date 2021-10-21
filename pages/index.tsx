@@ -15,7 +15,25 @@ const ContiPage = () => {
   const [mainColor, setMainColor] = useState('#51d4b0')
   const size = useWindowSize()
 
+  const registerDemoElements = () => {
+    if (
+      typeof window === 'undefined' ||
+      typeof window.frontbook === 'undefined' ||
+      !Array.isArray(window.frontbook.demo)
+    )
+      return
+    for (const demo of window.frontbook.demo) {
+      if (demo.renderManualComponent) {
+        window.frontbook.registerComponent(
+          demo.name,
+          demo.renderManualComponent
+        )
+      }
+    }
+  }
+
   useEffect(() => {
+    registerDemoElements()
     setComponents(window.frontbook?.demo ?? [])
     setPositions(window.frontbook?.positions ?? [])
 
