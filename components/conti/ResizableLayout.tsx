@@ -59,8 +59,10 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
     props.items.map((item) => {
       if (!item.name) return
       try {
-        ;(window as any).frontbook.react({
-          name: `${item.name}-local`,
+        void (window as any).frontbook.react({
+          name: item.renderManualComponent
+            ? `${item.name}-demo`
+            : `${item.name}-local`,
           props: item.renderProps
             ? item.renderProps(Conti.componentProps[item.name!])
             : {}
@@ -76,7 +78,9 @@ const ResizableLayout = (_props: IResizableLayoutProps) => {
           let renderedComponent = <></>
           try {
             renderedComponent = React.createElement(
-              `${item.name}-local`,
+              item.renderManualComponent
+                ? `${item.name}-demo`
+                : `${item.name}-local`,
               undefined,
               item.children
             )

@@ -25,7 +25,7 @@ const ContiPage = () => {
     for (const demo of window.frontbook.demo) {
       if (demo.renderManualComponent) {
         window.frontbook.registerComponent(
-          demo.name,
+          `${demo.name}-demo`,
           demo.renderManualComponent
         )
       }

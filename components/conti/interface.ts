@@ -5,7 +5,7 @@ export interface IContiComponent {
     [propName: string]: IContiComponentProps
   }
   renderProps?: (props: IContiStoreComponentValue) => Record<string, any>
-  renderWrapper?: (props: IContiStoreComponentValue) => JSX.Element
+  renderManualComponent?: (props: IContiStoreComponentValue) => JSX.Element
   children?: string
   documentUrl?: string
   x?: number
