@@ -39,3 +39,4 @@ yarn-error.log*
 # project
 coverage
 .next
+public/component.js

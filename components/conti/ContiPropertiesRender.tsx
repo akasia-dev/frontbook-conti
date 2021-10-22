@@ -3,6 +3,8 @@ import { observer } from 'mobx-react'
 import { Switch, NumericInput } from '@blueprintjs/core'
 import type { ContiComponentPropSelectValue } from './interface'
 
+declare const window: any
+
 const ContiPropertiesRender = () => {
   const { Conti } = core.store
 
@@ -25,9 +27,26 @@ const ContiPropertiesRender = () => {
           const update = (value) => {
             Conti.componentProps[Conti.selectedComponent!][componentPropName] =
               value
-            ;(window as any).frontbook.update(
+
+            const item = window.frontbook.demo?.filter((item) => {
+              return item.name === Conti.selectedComponent
+            })[0]
+
+            void (window as any).frontbook.update(
               `${Conti.selectedComponent}-local`,
-              (component) => (component[componentPropName] = value)
+              (component) => {
+                const changedProps = item.renderProps
+                  ? item.renderProps(Conti.componentProps[item.name!])
+                  : {}
+
+                for (const changedPropsName in changedProps) {
+                  if (
+                    changedProps[changedPropsName] !==
+                    component[changedPropsName]
+                  )
+                    component[changedPropsName] = changedProps[changedPropsName]
+                }
+              }
             )
           }
 
