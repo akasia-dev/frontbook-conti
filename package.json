@@ -10,7 +10,8 @@
     "prod": "npm i && npm run build && pm2 restart ecosystem.config.js --env production",
     "type-check": "tsc --noEmit",
     "lint": "eslint --fix . --ext .ts,.tsx",
-    "clean": "rm -rf .next && rm -rf node_modules && npm i"
+    "clean": "rm -rf .next && rm -rf node_modules && npm i",
+    "prestart": "npx prestart"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
